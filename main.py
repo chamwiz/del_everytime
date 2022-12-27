@@ -5,7 +5,8 @@ from selenium.webdriver.common.alert import Alert
 id = "test"
 pw = "test"
 # 삭제한 게시글 수
-deleteCount = 0
+articleCount = 0
+commentCount = 0
 
 # 에브리타임 로그인
 driver = webdriver.Chrome()
@@ -27,9 +28,31 @@ while True:
         # 팝업 확인
         driver.implicitly_wait(10)
         Alert(driver).accept()
-        deleteCount += 1
+        articleCount += 1
     except:
-        print("{}개의 게시글이 삭제됐습니다.".format(deleteCount))
+        print("{}개의 게시글이 삭제됐습니다.".format(articleCount))
         break
 
+while True:
+    try:
+        # 댓글 단 글 페이지 들어가기
+        driver.get("https://everytime.kr/mycommentarticle")
+        # 상단 게시글 들어가기
+        driver.implicitly_wait(10)
+        driver.find_elements(By.CLASS_NAME,"article")[0].click()
+        # 삭제 버튼 누르기
+        while True:
+            try:
+                driver.implicitly_wait(10)
+                driver.find_element(By.CLASS_NAME,'del').click()
+                # 팝업 확인
+                driver.implicitly_wait(10)
+                Alert(driver).accept()
+                commentCount += 1
+            except:
+                break
+    except:
+        print("{}개의 댓글이 삭제됐습니다.".format(commentCount))
+        break
+    
 driver.quit()
